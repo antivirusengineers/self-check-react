@@ -1,4 +1,5 @@
 import React from 'react';
+import Chart from './Chart';
 
 class COVIDForm extends React.Component {
     constructor(props) {
@@ -10,7 +11,8 @@ class COVIDForm extends React.Component {
             city: "",
             state: "",
             checkedSymptoms: new Set(),
-            results: ""
+            results: "",
+            data: []
         };
         this.submitForm = this.submitForm.bind(this);
         this.handleSymptom = this.handleSymptom.bind(this);
@@ -144,6 +146,7 @@ class COVIDForm extends React.Component {
                     </div>
                 </div>
                 <button className="button submit" type="button" onClick={this.submitForm}>Analyze</button>
+                <Chart data={this.state.data}></Chart>
                 <div>{this.state.results}</div>
             </form>);
     }
@@ -177,7 +180,7 @@ class COVIDForm extends React.Component {
         this.state.checkedSymptoms.forEach(s => symptoms.push(s));
 
         let text = 
-            "\nGender: " + this.state.gender + "\n" +
+            "Gender: " + this.state.gender + "\n" +
             "Age: " + this.state.age + "\n" +
             "City: " + this.state.city + "\n" +
             "State: " + this.state.state + "\n" +
@@ -188,7 +191,18 @@ class COVIDForm extends React.Component {
             return <p key={i}>{item}</p>;
         });
 
-        this.setState(() => ({ results: newText }));
+        this.setState(() => ({ 
+            results: newText,
+            data: [
+                {name: '18-24', uv: 31.47, pv: 2400, fill: '#8884d8'},
+                {name: '25-29', uv: 26.69, pv: 4567, fill: '#83a6ed'},
+                {name: '30-34', uv: 15.69, pv: 1398, fill: '#8dd1e1'},
+                {name: '35-39', uv: 8.22, pv: 9800, fill: '#82ca9d'},
+                {name: '40-49', uv: 8.63, pv: 3908, fill: '#a4de6c'},
+                {name: '50+', uv: 2.63, pv: 4800, fill: '#d0ed57'},
+                {name: 'unknown', uv: 6.67, pv: 4800, fill: '#ffc658'}
+            ]
+        }));
     }
 }
 

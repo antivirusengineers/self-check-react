@@ -2,7 +2,6 @@ import React from 'react';
 import './assets/css/App.css';
 import LikeButton from './assets/js/LikeButton.js'
 import COVIDForm from './assets/js/COVIDForm';
-import Chart from './assets/js/Chart';
 
 function App() {
   return (
@@ -31,16 +30,6 @@ function App() {
               				<LikeButton/>
 						</div>
 					</section>
-
-                    <section id="chart" className="wrapper style1  fade-up">
-						<div className="inner">
-                            <h2>COVID Infections by Age</h2>
-                            <Chart/>
-						</div>
-					</section>
-
-
-							
 
 					<section id="three" className="wrapper style1 fade-up">
 						<div className="inner">
