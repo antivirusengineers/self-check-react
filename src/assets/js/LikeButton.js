@@ -53,7 +53,7 @@ class LikeButton extends React.Component {
             
         return (
             <button onClick={() => this.handleClick() }>
-                Like
+                Symptom API Test
             </button>
         );
     }

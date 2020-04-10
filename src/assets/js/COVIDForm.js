@@ -4,12 +4,13 @@ class COVIDForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            gender: 0,
-            age: 25,
+            gender: "",
+            age: "",
             health: "N/A",
-            city: "Seattle",
-            state: "WA",
-            checkedSymptoms: new Set()
+            city: "",
+            state: "",
+            checkedSymptoms: new Set(),
+            results: ""
         };
         this.submitForm = this.submitForm.bind(this);
         this.handleSymptom = this.handleSymptom.bind(this);
@@ -143,6 +144,7 @@ class COVIDForm extends React.Component {
                     </div>
                 </div>
                 <button className="button submit" type="button" onClick={this.submitForm}>Analyze</button>
+                <div>{this.state.results}</div>
             </form>);
     }
 
@@ -174,12 +176,19 @@ class COVIDForm extends React.Component {
         let symptoms = [];
         this.state.checkedSymptoms.forEach(s => symptoms.push(s));
 
-        console.log("Gender: " + this.state.gender);
-        console.log("Age: " + this.state.age);
-        console.log("City: " + this.state.city);
-        console.log("State: " + this.state.state);
-        console.log("Symptoms: " + symptoms);
-        console.log("Underlying Health Conditions: " + this.state.health);
+        let text = 
+            "\nGender: " + this.state.gender + "\n" +
+            "Age: " + this.state.age + "\n" +
+            "City: " + this.state.city + "\n" +
+            "State: " + this.state.state + "\n" +
+            "Symptoms: " + symptoms + "\n" +
+            "Underlying Health Conditions: " + this.state.health;
+
+        let newText = text.split('\n').map((item, i) => {
+            return <p key={i}>{item}</p>;
+        });
+
+        this.setState(() => ({ results: newText }));
     }
 }
 
