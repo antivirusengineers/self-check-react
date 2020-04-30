@@ -1,6 +1,5 @@
 import React from 'react';
 import './assets/css/App.css';
-import LikeButton from './assets/js/LikeButton.js'
 import COVIDForm from './assets/js/COVIDForm';
 
 function App() {

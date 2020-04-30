@@ -2,10 +2,6 @@ import React from 'react';
 import { RadialBarChart, RadialBar, Legend, Tooltip } from 'recharts';
 
 class Chart extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    
     render () {
         const style = {
             top: 20,

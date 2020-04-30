@@ -1,5 +1,4 @@
 import React from 'react';
-import Chart from './Chart';
 import PiePercentChart from './PiePercentChart';
 import EthnicityChart from './EthnicityChart';
 
@@ -17,7 +16,8 @@ class COVIDForm extends React.Component {
             ethnicity: "",
             checkedSymptoms: new Set(),
             results: "",
-            data: []
+            data: [],
+            hide: true
         };
         this.submitForm = this.submitForm.bind(this);
         this.handleSymptom = this.handleSymptom.bind(this);
@@ -45,7 +45,7 @@ class COVIDForm extends React.Component {
                     <div className="field half"></div>
                     <div className="field half">
                         <label htmlFor="city" style={{ color: 'gray' }}>City</label>
-                        <input disabled="true" style={{ color: 'gray' }}
+                        <input disabled={true} style={{ color: 'gray' }}
                             type="text" name="city" id="city" value={this.state.city} 
                             onChange={(e) => { this.setState({city: e.target.value}); }}/>
                     </div>
@@ -53,7 +53,7 @@ class COVIDForm extends React.Component {
                     <div className="field half" >
                         <label htmlFor="state" style={{ color: 'gray' }}>State</label>
                         <select 
-                            disabled="true" style={{ color: 'gray' }}
+                            disabled={true} style={{ color: 'gray' }}
                             name="state" id="state" value={this.state.state} 
                             onChange={(e) => { this.setState({state: e.target.value}); }}>
                             <option value="">- Select -</option>
@@ -135,7 +135,7 @@ class COVIDForm extends React.Component {
                     <div className="field half">
                         <label htmlFor="ethnicity" style={{ color: 'gray' }}>Ethnicity</label>
                         <select 
-                            disabled="true" style={{ color: 'gray' }}
+                            disabled={true} style={{ color: 'gray' }}
                             name="ethnicity" id="ethnicity" value={this.state.ethnicity} 
                             onChange={(e) => { this.setState({ethnicity: e.target.value}); }}>
                             <option value="">- Select -</option>
@@ -148,33 +148,33 @@ class COVIDForm extends React.Component {
                             onChange={(e) => { this.setState({span: e.target.value}); }}/>
                     </div>
                     <div className="field half">
-                        <label htmlFor="message">Symptoms</label>
+                        <label htmlFor="message" style={{ color: 'gray' }}>Symptoms</label>
                         <div>
-                            <input type="checkbox" id="fever" name="fever" onChange={this.handleSymptom}></input>
+                            <input disabled={true} type="checkbox" id="fever" name="fever" onChange={this.handleSymptom}></input>
                             <label htmlFor="fever">Fever</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="cough" name="cough" onChange={this.handleSymptom}></input>
+                            <input disabled={true} type="checkbox" id="cough" name="cough" onChange={this.handleSymptom}></input>
                             <label htmlFor="cough">Cough</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="chills" name="chills" onChange={this.handleSymptom}>
+                            <input disabled={true} type="checkbox" id="chills" name="chills" onChange={this.handleSymptom}>
                             </input>
                             <label htmlFor="chills">Chills</label>
                         </div>
                     </div>
                     <div className="field half">
-                        <label htmlFor="message">&nbsp;</label>
+                        <label htmlFor="message" style={{ color: 'gray' }}>&nbsp;</label>
                         <div>
-                            <input type="checkbox" id="difficulty_breathing" name="difficulty_breathing" onChange={this.handleSymptom}></input>
+                            <input disabled={true} type="checkbox" id="difficulty_breathing" name="difficulty_breathing" onChange={this.handleSymptom}></input>
                             <label htmlFor="difficulty_breathing">Difficulty Breathing</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="headache" name="headache" onChange={this.handleSymptom}></input>
+                            <input disabled={true} type="checkbox" id="headache" name="headache" onChange={this.handleSymptom}></input>
                             <label htmlFor="headache">Headache</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="fatigue" name="fatigue" onChange={this.handleSymptom}></input>
+                            <input disabled={true} type="checkbox" id="fatigue" name="fatigue" onChange={this.handleSymptom}></input>
                             <label htmlFor="fatigue">Fatigue</label>
                         </div>
                     </div>
@@ -190,7 +190,7 @@ class COVIDForm extends React.Component {
                 <button className="button submit" type="button" onClick={this.submitForm}>Search</button>
                 {/* <Chart data={this.state.data}></Chart> */}
                 <PiePercentChart data={this.state.data} gender={this.state.gender} age={this.state.age} country={this.state.country}></PiePercentChart>
-                <EthnicityChart></EthnicityChart>
+                <EthnicityChart hide={this.state.hide}></EthnicityChart>
                 <div>{this.state.results}</div>
             </form>);
     }
@@ -230,7 +230,8 @@ class COVIDForm extends React.Component {
             "State: " + this.state.state + "\n" +
             "Symptoms: " + symptoms + "\n" +
             "Underlying Health Conditions: " + this.state.health;
-
+        console.log(text);
+        
         const url = "https://covid-long-line-api.azurewebsites.net/covid/prevalence"
         // const attributes = {
         //     // "country":this.state.country,
@@ -239,13 +240,13 @@ class COVIDForm extends React.Component {
         // };
 
         let attributes = {};
-        if(this.state.country != "") {
+        if(this.state.country !== "") {
             attributes["country"] = this.state.country
         }
-        if(this.state.age != 0) {
+        if(this.state.age !== 0) {
             attributes["age"] = this.state.age
         }
-        if(this.state.gender != "") {
+        if(this.state.gender !== "") {
             attributes["gender"] = this.state.gender
         }
 
@@ -278,7 +279,8 @@ class COVIDForm extends React.Component {
                     data: [
                         {name: `${this.state.gender} ${minAge} - ${maxAge}`, value: result.percentage},
                         {name: "Other", value: 1-result.percentage},
-                    ]
+                    ],
+                    hide: false
                 });
             },
             (error) => {
@@ -290,9 +292,9 @@ class COVIDForm extends React.Component {
             }
         )
 
-        let newText = text.split('\n').map((item, i) => {
-            return <p key={i}>{item}</p>;
-        });
+        // let newText = text.split('\n').map((item, i) => {
+        //     return <p key={i}>{item}</p>;
+        // });
     }
 }
 

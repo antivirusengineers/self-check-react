@@ -4,6 +4,6 @@
         "node_modules{,/**}",
         ".vscode{,/**}"
     ],
-    "appService.defaultWebAppToDeploy": "/subscriptions/9a780058-4a49-44de-800a-7e0ab4711d71/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/azure-react-test-app",
-    "appService.deploySubpath": "build"
+    "appService.deploySubpath": "build",
+    "appService.defaultWebAppToDeploy": "/subscriptions/9a780058-4a49-44de-800a-7e0ab4711d71/resourceGroups/appsvc_windows_centralus/providers/Microsoft.Web/sites/covid-self-check"
 }

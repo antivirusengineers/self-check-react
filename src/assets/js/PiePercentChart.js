@@ -4,20 +4,8 @@ import {
 } from 'recharts';
 
 class PiePercentChart extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render () {
-        const style = {
-            top: 20,
-            left: 350,
-            lineHeight: '24px'
-        };
-
-        console.log(this.props.data)
-
-        if(Object.keys(this.props.data).length == 0) {
+        if(Object.keys(this.props.data).length === 0) {
             return (<div></div>)
         }
           
@@ -39,7 +27,7 @@ class PiePercentChart extends React.Component {
             );
         };
 
-        const title = (this.props.country == "") ?
+        const title = (this.props.country === "") ?
             "COVID Infection Search Results":
             `COVID Infection Search Results in ${this.props.country}`;
 
