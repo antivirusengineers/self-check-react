@@ -27,14 +27,12 @@ function App() {
 							<ul className="actions">
 								<li><a href="#three" className="button scrolly">Check myself!</a></li>
 							</ul>
-              				<LikeButton/>
+              				{/* <LikeButton/> */}
 						</div>
 					</section>
 
 					<section id="three" className="wrapper style1 fade-up">
 						<div className="inner">
-							<h2>Tell us about yourself</h2>
-							<p>How are you feeling?</p>
 							<div className="split style1">
 								<section>
                                     <COVIDForm/>

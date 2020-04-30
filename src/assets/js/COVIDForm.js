@@ -1,15 +1,20 @@
 import React from 'react';
 import Chart from './Chart';
+import PiePercentChart from './PiePercentChart';
+import EthnicityChart from './EthnicityChart';
 
 class COVIDForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            gender: "",
-            age: "",
+            gender: "Male",
+            age: "25",
+            span: "5",
             health: "N/A",
             city: "",
             state: "",
+            country: "USA",
+            ethnicity: "",
             checkedSymptoms: new Set(),
             results: "",
             data: []
@@ -24,35 +29,34 @@ class COVIDForm extends React.Component {
         return (
             <form>
                 <div className="fields">
+                    <div className="field">
+                        <h2>COVID Infection Search</h2>
+                    </div>
                     <div className="field half">
-                        <label htmlFor="gender">Gender</label>
+                        <label htmlFor="country">Country</label>
                         <select 
-                            name="gender" id="gender" value={this.state.gender} 
-                            onChange={(e) => { this.setState({gender: e.target.value}); }}>
-                            <option value="0">- Select -</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
+                            name="country" id="country" value={this.state.country} 
+                            onChange={(e) => { this.setState({country: e.target.value}); }}>
+                            <option value="">- Select -</option>
+                            <option value="USA">USA</option>
+                            <option value="Japan">Japan</option>
                         </select>
                     </div>
-                    
+                    <div className="field half"></div>
                     <div className="field half">
-                        <label htmlFor="age">Age</label>
-                        <input 
-                            type="text" maxLength = "3" id="age" value={this.state.age} 
-                            onChange={(e) => { this.setState({age: e.target.value}); }}/>
-                    </div>
-                    <div className="field half">
-                        <label htmlFor="city">City</label>
-                        <input 
+                        <label htmlFor="city" style={{ color: 'gray' }}>City</label>
+                        <input disabled="true" style={{ color: 'gray' }}
                             type="text" name="city" id="city" value={this.state.city} 
                             onChange={(e) => { this.setState({city: e.target.value}); }}/>
                     </div>
-                    <div className="field half">
-                        <label htmlFor="state">State</label>
+
+                    <div className="field half" >
+                        <label htmlFor="state" style={{ color: 'gray' }}>State</label>
                         <select 
+                            disabled="true" style={{ color: 'gray' }}
                             name="state" id="state" value={this.state.state} 
                             onChange={(e) => { this.setState({state: e.target.value}); }}>
+                            <option value="">- Select -</option>
                             <option value="AL">Alabama</option>
                             <option value="AK">Alaska</option>
                             <option value="AZ">Arizona</option>
@@ -106,6 +110,43 @@ class COVIDForm extends React.Component {
                             <option value="WY">Wyoming</option>
                         </select>
                     </div>
+                    <div className="field"></div>
+                    <div className="field">
+                        <h3>Demographic Criteria</h3>
+                        <p>Enter any combination of demographics</p>
+                    </div>
+                    <div className="field half">
+                        <label htmlFor="gender">Gender</label>
+                        <select 
+                            name="gender" id="gender" value={this.state.gender} 
+                            onChange={(e) => { this.setState({gender: e.target.value}); }}>
+                            <option value="0">- Select -</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div className="field half">
+                        <label htmlFor="age">Age</label>
+                        <input 
+                            type="text" maxLength = "3" id="age" value={this.state.age} 
+                            onChange={(e) => { this.setState({age: e.target.value}); }}/>
+                    </div>
+                    <div className="field half">
+                        <label htmlFor="ethnicity" style={{ color: 'gray' }}>Ethnicity</label>
+                        <select 
+                            disabled="true" style={{ color: 'gray' }}
+                            name="ethnicity" id="ethnicity" value={this.state.ethnicity} 
+                            onChange={(e) => { this.setState({ethnicity: e.target.value}); }}>
+                            <option value="">- Select -</option>
+                        </select>
+                    </div>
+                    <div className="field half">
+                    <label htmlFor="span">Age Span (± X years)</label>
+                        <input 
+                            type="text" maxLength = "3" id="span" value={this.state.span} 
+                            onChange={(e) => { this.setState({span: e.target.value}); }}/>
+                    </div>
                     <div className="field half">
                         <label htmlFor="message">Symptoms</label>
                         <div>
@@ -138,15 +179,18 @@ class COVIDForm extends React.Component {
                         </div>
                     </div>
                     <div className="field">
-                        <label htmlFor="health">Underlying Health Conditions</label>
+                        <label htmlFor="health" style={{ color: 'gray' }}>Underlying Health Conditions</label>
                         <textarea 
-                            name="health" id="health" rows="3" value={this.state.health} 
+                            disabed="true" style={{ color: 'gray' }}
+                            name="health" id="health" rows="2" value={this.state.health} 
                             onChange={(e) => { this.setState({health: e.target.value}); }}>
                         </textarea>
                     </div>
                 </div>
-                <button className="button submit" type="button" onClick={this.submitForm}>Analyze</button>
-                <Chart data={this.state.data}></Chart>
+                <button className="button submit" type="button" onClick={this.submitForm}>Search</button>
+                {/* <Chart data={this.state.data}></Chart> */}
+                <PiePercentChart data={this.state.data} gender={this.state.gender} age={this.state.age} country={this.state.country}></PiePercentChart>
+                <EthnicityChart></EthnicityChart>
                 <div>{this.state.results}</div>
             </form>);
     }
@@ -187,22 +231,68 @@ class COVIDForm extends React.Component {
             "Symptoms: " + symptoms + "\n" +
             "Underlying Health Conditions: " + this.state.health;
 
+        const url = "https://covid-long-line-api.azurewebsites.net/covid/prevalence"
+        // const attributes = {
+        //     // "country":this.state.country,
+        //     "age":this.state.age,
+        //     // "gender":this.state.gender
+        // };
+
+        let attributes = {};
+        if(this.state.country != "") {
+            attributes["country"] = this.state.country
+        }
+        if(this.state.age != 0) {
+            attributes["age"] = this.state.age
+        }
+        if(this.state.gender != "") {
+            attributes["gender"] = this.state.gender
+        }
+
+        const span = parseInt(this.state.span)
+
+        const additional_args = {
+            "age": {
+                "span":span
+            }
+        };
+
+        const minAge = parseInt(this.state.age) - span;
+        const maxAge = parseInt(this.state.age) + span;
+
+        var formData = new FormData(); // Currently empty
+        formData.append('attributes', JSON.stringify(attributes));
+        formData.append('additional_args', JSON.stringify(additional_args));
+
+        fetch(url, {
+            method: "POST",
+            body: formData})
+        .then(res => res.json())
+        .then(
+            (result) => {
+                console.log(result.percentage)
+                this.setState({
+                    liked: true,
+                    isLoaded: true,
+                    percentage: result.percentage * 100,
+                    data: [
+                        {name: `${this.state.gender} ${minAge} - ${maxAge}`, value: result.percentage},
+                        {name: "Other", value: 1-result.percentage},
+                    ]
+                });
+            },
+            (error) => {
+                console.log(error.message)
+                this.setState({
+                    liked: true,
+                    isLoaded: true,
+                });
+            }
+        )
+
         let newText = text.split('\n').map((item, i) => {
             return <p key={i}>{item}</p>;
         });
-
-        this.setState(() => ({ 
-            results: newText,
-            data: [
-                {name: '18-24', uv: 31.47, pv: 2400, fill: '#8884d8'},
-                {name: '25-29', uv: 26.69, pv: 4567, fill: '#83a6ed'},
-                {name: '30-34', uv: 15.69, pv: 1398, fill: '#8dd1e1'},
-                {name: '35-39', uv: 8.22, pv: 9800, fill: '#82ca9d'},
-                {name: '40-49', uv: 8.63, pv: 3908, fill: '#a4de6c'},
-                {name: '50+', uv: 2.63, pv: 4800, fill: '#d0ed57'},
-                {name: 'unknown', uv: 6.67, pv: 4800, fill: '#ffc658'}
-            ]
-        }));
     }
 }
 
